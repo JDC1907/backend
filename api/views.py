@@ -40,3 +40,43 @@ class LandingAPI(APIView):
 	        
          # Devuelve el id del objeto guardado
          return Response({"id": new_resource.key}, status=status.HTTP_201_CREATED)
+
+
+
+
+class LandingAPIDetail(APIView):
+
+    name = 'Landing Detail API'
+    collection_name = 'coleccion'
+
+    def get(self, request, pk):
+        # Referencia al documento específico
+        ref = db.reference(f'{self.collection_name}/{pk}')
+        data = ref.get()
+
+        if data:
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Documento no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, pk):
+        # Referencia al documento específico
+        ref = db.reference(f'{self.collection_name}/{pk}')
+        data = ref.get()
+
+        if data:
+            ref.update(request.data)
+            return Response({"message": "Documento actualizado correctamente"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Documento no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        # Referencia al documento específico
+        ref = db.reference(f'{self.collection_name}/{pk}')
+        data = ref.get()
+
+        if data:
+            ref.delete()
+            return Response({"message": "Documento eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error": "Documento no encontrado"}, status=status.HTTP_404_NOT_FOUND)
